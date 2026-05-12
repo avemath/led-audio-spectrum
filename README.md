@@ -1,4 +1,4 @@
-# LED Audio Spectrum Analyzer — LEA
+# LED Audio Spectrum Analyzer - LEA
 
 An audio-reactive spectrum analyzer running on an ESP32 with a 16×16 WS2812B LED matrix. The firmware performs real-time FFT on microphone input, maps frequency bins to 16 display bands with automatic gain control, and switches between a color spectrum display and a radial idle glow animation based on adaptive silence detection.
 
@@ -34,8 +34,8 @@ Add a 300–500 Ω resistor in series on the LED data line and a 100–1000 µF 
 
 Install both via the Arduino Library Manager or PlatformIO:
 
-- **FastLED** — LED driving and HSV color math
-- **ArduinoFFT** (`arduinoFFT.h`) — FFT computation
+- **FastLED** - LED driving and HSV color math
+- **ArduinoFFT** (`arduinoFFT.h`) - FFT computation
 
 ---
 
@@ -69,8 +69,8 @@ Each band's magnitude is the average of the FFT bins within its range. The band 
 |----------|-------|-------------|
 | `SENSITIVITY_GAIN` | 4.5 | Multiplier applied after normalization |
 | `levelMax` (initial) | 650.0 | Starting AGC ceiling |
-| `AGC_RISE` | 0.25 | Attack rate — how fast the ceiling rises to a new peak |
-| `AGC_FALL` | 0.008 | Decay rate — how slowly the ceiling falls when signal is quiet |
+| `AGC_RISE` | 0.25 | Attack rate - how fast the ceiling rises to a new peak |
+| `AGC_FALL` | 0.008 | Decay rate - how slowly the ceiling falls when signal is quiet |
 | `LEVELMAX_FLOOR` | 120.0 | Minimum AGC ceiling; prevents the display from going full-scale on noise |
 
 The AGC ceiling rises quickly when a loud signal exceeds it (`AGC_RISE = 0.25`) and decays very slowly (`AGC_FALL = 0.008`), maintaining useful dynamic range across a wide range of playback volumes and source distances. The floor of 120 allows quiet or distant audio to still produce visible bars.
