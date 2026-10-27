@@ -94,7 +94,7 @@ See the [Silence Detection](#silence-detection) section below for the full descr
 
 ### Spectrum Mode
 
-Activated when audio amplitude exceeds the enter threshold. Each of the 16 columns displays a bar whose height corresponds to the energy in that frequency band, scaled by the AGC and smoothed by the IIR filter. Color is mapped by vertical position using HSV hue values 0 to 160 (red at the bottom through green at the top). A white dot marks the peak level for each band, holding for `PEAK_HOLD_FRAMES` frames then falling at `PEAK_FALL_RATE` pixels per frame.
+Activated when audio amplitude exceeds the enter threshold. Each of the 16 columns displays a bar whose height corresponds to the energy in that frequency band, scaled by the AGC and smoothed by the IIR filter. Color is mapped by row: the hue runs from 0 on the bottom row to 150 on the top row, so each bar goes red, orange, yellow, green and aqua, with the top row aqua-blue. A white dot marks the peak level for each band, holding for `PEAK_HOLD_FRAMES` frames then falling at `PEAK_FALL_RATE` pixels per frame.
 
 ### Idle Glow Mode
 
