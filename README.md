@@ -26,7 +26,7 @@ ESP32 GND     ──────────────── Shared ground (ma
 3.3V          ──────────────── Mic module VCC
 ```
 
-Add a 300–500 Ω resistor in series on the LED data line and a 100–1000 µF bulk capacitor across the LED power rails to suppress transients.
+Add a 300 to 500 Ω resistor in series on the LED data line and a 100 to 1000 µF bulk capacitor across the LED power rails to suppress transients.
 
 ---
 
@@ -94,7 +94,7 @@ See the [Silence Detection](#silence-detection) section below for the full descr
 
 ### Spectrum Mode
 
-Activated when audio amplitude exceeds the enter threshold. Each of the 16 columns displays a bar whose height corresponds to the energy in that frequency band, scaled by the AGC and smoothed by the IIR filter. Color is mapped by vertical position using HSV hue values 0–160 (red at the bottom through green at the top). A white dot marks the peak level for each band, holding for `PEAK_HOLD_FRAMES` frames then falling at `PEAK_FALL_RATE` pixels per frame.
+Activated when audio amplitude exceeds the enter threshold. Each of the 16 columns displays a bar whose height corresponds to the energy in that frequency band, scaled by the AGC and smoothed by the IIR filter. Color is mapped by vertical position using HSV hue values 0 to 160 (red at the bottom through green at the top). A white dot marks the peak level for each band, holding for `PEAK_HOLD_FRAMES` frames then falling at `PEAK_FALL_RATE` pixels per frame.
 
 ### Idle Glow Mode
 
@@ -109,20 +109,20 @@ Active during silence. Displays a radial breathing animation across the full 16�
 
 ## Silence Detection
 
-Mode switching uses a three-layer system to avoid false triggers and chattering:
+Mode switching uses four steps to avoid false triggers and chattering:
 
 **1. Amplitude smoothing.** The mean-absolute-value amplitude of each 128-sample frame is exponentially smoothed with `AMP_DECAY = 0.90`, giving a sluggish signal that does not react to individual transients.
 
-**2. Adaptive noise baseline.** A separate baseline tracks the ambient noise floor using a slow exponential filter (`BASELINE_ALPHA_SLOW = 0.0015`). During the first 2500 ms after boot (warmup), a faster rate (`BASELINE_ALPHA_FAST = 0.02`) is used to learn the environment quickly. The baseline only updates when the smoothed amplitude is below the exit threshold, so music does not poison the noise floor estimate.
+**2. Adaptive noise baseline.** A separate baseline tracks the ambient noise floor using a slow exponential filter (`BASELINE_ALPHA_SLOW = 0.0015`). During the first 2500 ms after the boot scroll ends (warmup), a faster rate (`BASELINE_ALPHA_FAST = 0.02`) is used to learn the environment quickly. The baseline only updates when the smoothed amplitude is below the exit threshold, so music does not poison the noise floor estimate.
 
-**3. Hysteresis thresholds.** Enter and exit thresholds are derived from the baseline each frame:
+**3. Enter and exit thresholds.** Enter and exit thresholds are derived from the baseline each frame:
 
 ```
 enterThreshold = noiseBaseline × 1.25 + 5.0    (minimum 25)
 exitThreshold  = noiseBaseline × 1.50 + 5.0    (minimum 18)
 ```
 
-The exit threshold is always higher than the enter threshold, creating a hysteresis band that prevents rapid mode flapping.
+Hysteresis needs the exit threshold below the enter threshold, so a level sitting between the two can't flip the mode back and forth. That only holds while the baseline is under about 13. In a quiet room the minimums set the gap (enter above 25, exit below 18), and the gap narrows as the baseline rises. Once the baseline passes about 13, the multipliers put the exit threshold above the enter threshold and the hysteresis band is gone. In that range the debounce in step 4 is the only thing that keeps the display from flickering between modes.
 
 **4. Debounce.** The amplitude must remain above `enterThreshold` for 4 consecutive frames before switching to spectrum mode, and must remain below `exitThreshold` for 8 consecutive frames before returning to idle. Either counter resets immediately if the condition breaks.
 
