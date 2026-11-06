@@ -130,7 +130,7 @@ Hysteresis needs the exit threshold below the enter threshold, so a level sittin
 
 ## Boot Sequence
 
-On power-up the firmware scrolls "LEA MARIE" across the matrix three times using a built-in 5×7 bitmap font before entering the main loop. Each letter is rendered in a hue derived from its position and loop index, producing a shifting rainbow effect across the message. Spacing between letters is 6 pixels (5-pixel glyph + 1-pixel gap). The `NULL` entry in the message array inserts a blank space between "LEA" and "MARIE".
+On power-up the firmware scrolls "LEA" across the matrix three times using a built-in 5×7 bitmap font before entering the main loop. Each letter is rendered in a hue derived from its position and loop index, producing a shifting rainbow effect across the message. Spacing between letters is 6 pixels (5-pixel glyph + 1-pixel gap). A `NULL` entry in the message array would insert a blank space.
 
 ---
 
